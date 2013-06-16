@@ -167,7 +167,7 @@ class PageLinesDeveloper {
 
 		foreach ( $constants as $c ) {
 			$cat = 'misc';
-			$value = constant( $c );
+			$value = defined( $c ) ? constant( $c ) : null;
 
 			if ( 0 === strpos($value, WP_CONTENT_DIR) ) {
 
