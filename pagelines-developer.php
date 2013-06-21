@@ -3,14 +3,14 @@
 Plugin Name: PageLines Developer
 Author: Evan Mattson
 Description: A plugin for pagelines developers developers developers
-Version: 1.0.1
+Version: 1.0.2
 PageLines: true
 */
 
 
 class PageLinesDeveloper {
 
-	const version = '1.0.1';
+	const version = '1.0.2';
 
 	private $toggles;
 
@@ -230,7 +230,7 @@ class PageLinesDeveloper {
 		$wp_admin_bar->add_menu( array(
 			'id'    => $this->slug,
 			'title' => sprintf('<i class="pldicon-pagelines icon-large"></i> %s', $this->is_dms ? 'DMS ' : ''). PL_CORE_VERSION,
-			'href'  => '#'
+			'href'  => is_admin() ? admin_url() : home_url()
 		)	);
 
 		/**
