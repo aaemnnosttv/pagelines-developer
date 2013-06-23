@@ -5,39 +5,98 @@
   font-weight: normal;
   font-style: normal;
 }
-#wpadminbar .pldicon-pagelines.ab-icon {
+#wpadminbar .menupop .ver-group {
+  display: inline-block;
+  white-space: pre;
+}
+#wpadminbar .menupop .ver-group.pl {
+  margin-left: 8px;
+}
+#wpadminbar .menupop .ver-group.pl > i.pldicon-pagelines:before {
   margin-top: 0;
+  text-align: left;
+  width: 16px;
+  vertical-align: middle;
+  font-size: 1.3333333333333em;
+}
+#wpadminbar .menupop .ab-item .version {
+  position: relative;
+  font-family: Consolas, Monaco, monospace;
+  background: rgba(0,0,0,0.25);
+  padding: 1px 7px;
+  border-radius: 4px;
+}
+#wpadminbar .menupop .ab-item .version .leftarrow:before,
+#wpadminbar .menupop .ab-item .version .rightarrow:before {
+  width: 0;
+  height: 0;
+  content: ' ';
+  position: absolute;
+  top: 4px;
+}
+#wpadminbar .menupop .ab-item .version .leftarrow:before {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid rgba(0,0,0,0.25);
+  left: -5px;
+}
+#wpadminbar .menupop .ab-item .version .rightarrow:before {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid rgba(0,0,0,0.25);
+  right: -5px;
+}
+#wpadminbar .menupop.hover .ab-item .version {
+  color: white;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group {
+  color: #555;
+  background: #303030;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group .ab-sub-wrapper {
+  color: #555;
+  background: #303030;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li:hover,
+#wpadminbar .menupop #wp-admin-bar-pl-group li.menupop.hover {
+  background: #232323;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li:hover > a,
+#wpadminbar .menupop #wp-admin-bar-pl-group li.menupop.hover > a {
+  color: #35a2d4;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li:hover a:hover,
+#wpadminbar .menupop #wp-admin-bar-pl-group li.menupop.hover a:hover {
+  color: #35a2d4;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li i {
+  color: inherit;
+  text-shadow: black 0 1px 0;
+  width: 19px;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-on a i,
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-on a:hover i,
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-off a i,
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-off a:hover i {
+  color: inherit;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-off a {
+  font-weight: bold;
+  color: #46a546;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-off a:hover {
+  color: #9d261d;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-on a i {
+  color: #555;
+}
+#wpadminbar .menupop #wp-admin-bar-pl-group li.toggle-on a:hover {
+  color: #46a546;
 }
 #wpadminbar #wp-admin-bar-pagelines-developer.hover > a i,
 #wpadminbar #wp-admin-bar-pagelines-developer:hover > a i {
   text-shadow: none;
   color: #049cdb;
-}
-#wpadminbar #wp-admin-bar-pagelines-developer-default i {
-  color: inherit;
-  text-shadow: white 0 -1px 0;
-  width: 19px;
-}
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-on a i,
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-on a:hover i,
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-off a i,
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-off a:hover i {
-  color: inherit;
-}
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-off a {
-  font-weight: bold;
-}
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-off a i {
-  color: #46a546;
-}
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-off a:hover {
-  color: #9d261d;
-}
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-on a i {
-  color: #9d261d;
-}
-#wpadminbar #wp-admin-bar-pagelines-developer-default .toggle-on a:hover {
-  color: #46a546;
 }
 #pl_constants td {
   vertical-align: top;
@@ -60,44 +119,44 @@
 #pl_constants .const-value {
   font-family: consolas, monaco, monospace;
 }
-[class^="pldicon-"]:before,
-[class*=" pldicon-"]:before {
+#wpadminbar [class^="pldicon-"]:before,
+#wpadminbar [class*=" pldicon-"]:before {
   font-family: PageLinesDeveloperIcons !important;
   font-weight: normal;
   font-style: normal;
   display: inline-block;
   text-decoration: inherit;
 }
-a [class^="pldicon-"],
-a [class*=" pldicon-"] {
+#wpadminbar a [class^="pldicon-"],
+#wpadminbar a [class*=" pldicon-"] {
   display: inline-block;
   text-decoration: inherit;
 }
-.icon-large:before {
+#wpadminbar .icon-large:before {
   vertical-align: middle;
   font-size: 1.3333333333333em;
 }
-li [class^="pldicon-"],
-li [class*=" pldicon-"] {
+#wpadminbar li [class^="pldicon-"],
+#wpadminbar li [class*=" pldicon-"] {
   display: inline-block;
   width: 1.25em;
   text-align: center;
 }
-li .icon-large:before,
-li .icon-large:before {
+#wpadminbar li .icon-large:before,
+#wpadminbar li .icon-large:before {
   width: 1.875em;
 }
-ul.icons {
+#wpadminbar ul.icons {
   list-style-type: none;
   margin-left: 2em;
   text-indent: -0.8em;
 }
-ul.icons li [class^="pldicon-"],
-ul.icons li [class*=" pldicon-"] {
+#wpadminbar ul.icons li [class^="pldicon-"],
+#wpadminbar ul.icons li [class*=" pldicon-"] {
   width: .8em;
 }
-ul.icons li .icon-large:before,
-ul.icons li .icon-large:before {
+#wpadminbar ul.icons li .icon-large:before,
+#wpadminbar ul.icons li .icon-large:before {
   vertical-align: initial;
 }
 .pldicon-glass:before {

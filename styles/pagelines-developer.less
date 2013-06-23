@@ -1,22 +1,9 @@
-/*  Based on Font Awesome
-    -------------------------------------------------------
-    The full suite of pictographic icons, examples, and documentation
-    can be found at: http://fortawesome.github.com/Font-Awesome/
-
-    License
-    -------------------------------------------------------
-    A special PageLines-Only GPL licensed version of Font Awesome was approved by the 
-  author via email. 
-  
-    Contact
-    -------------------------------------------------------
-    Email: dave@davegandy.com
-    Twitter: http://twitter.com/fortaweso_me
-    Work: Lead Product Designer @ http://kyruus.com
-
-   */
 
 @iconFont = '@{plPluginsRoot}/pagelines-developer/icon-font/plfont-regular';
+@ver_c = fade(black, 25);
+@pl-groupbg: #303030;
+@wp-link: #21759b;
+@link-hover: lighten( @wp-link, 15 );
 
 @font-face {
   font-family: 'PageLinesDeveloperIcons';
@@ -30,9 +17,109 @@
 }
 
 #wpadminbar {
-	.pldicon-pagelines.ab-icon {
-		margin-top: 0;
+	.ver-group {
 	}
+	
+	.menupop {
+
+		.ver-group {
+			display: inline-block;
+			white-space: pre;
+			&.pl {
+				margin-left: 8px;
+				> i.pldicon-pagelines:before {
+					margin-top: 0;
+					text-align: left;
+					width: 16px;
+					// large styling
+					vertical-align: middle;
+					font-size: 4/3em;
+				}		
+			}
+			&.wp {
+				//.ab-icon { float: right; }
+			}
+		}
+	
+		.ab-item .version {
+			position: relative;
+			font-family: Consolas, Monaco, monospace;
+			background: @ver_c;
+			padding: 1px 7px;
+			border-radius: 4px;
+			
+			.leftarrow:before,
+			.rightarrow:before {
+				width: 0;
+				height: 0;
+				content: ' ';
+				position: absolute;
+				top: 4px;
+			}
+			.leftarrow:before {
+				border-top: 5px solid transparent;
+				border-bottom: 5px solid transparent;
+				border-right: 5px solid @ver_c;
+				left: -5px;
+			}
+			.rightarrow:before {
+				border-top: 5px solid transparent;
+				border-bottom: 5px solid transparent;
+				border-left: 5px solid @ver_c;
+				right: -5px;
+			}
+		}
+		
+		&.hover {
+			.ab-item .version { color: white; }
+		}
+
+		// ul
+		#wp-admin-bar-pl-group {
+			color: @gray;
+			background: @pl-groupbg;
+			.ab-sub-wrapper {
+				color: @gray;
+				background: @pl-groupbg;
+			}
+			li {
+				&:hover,
+				&.menupop.hover {
+					background: darken( @pl-groupbg, 5 );
+					> a { color: @link-hover; }
+					a:hover { color: @link-hover; }
+				}
+				i {
+					color: inherit;
+					text-shadow: black 0 1px 0;
+					width: 19px;
+				}		
+				
+				&.toggle-on,
+				&.toggle-off { 
+					a i,
+					a:hover i {
+						color: inherit;
+					}
+				}
+				
+				// on color
+				&.toggle-off a {
+					font-weight: bold;
+					color: @green;
+					//i { color: @green; }
+					&:hover { color: @red; }
+				}
+				// off
+				&.toggle-on a {
+					i { color: @gray; }
+					&:hover { color: @green; }
+				}
+			}
+		}
+	}
+	
+	
 	
 	#wp-admin-bar-pagelines-developer {
 		&.hover,
@@ -47,39 +134,6 @@
 	
 	#wp-admin-bar-pagelines-developer-default {
 		
-		i {
-			color: inherit;
-			text-shadow: white 0 -1px 0;
-			width: 19px;
-		}		
-		
-		.toggle-on,
-		.toggle-off { 
-			a i,
-			a:hover i {
-				color: inherit;
-			}
-		}
-		
-		// on color
-		.toggle-off a {
-			font-weight: bold;
-			i {
-				color: @green;
-			}
-			&:hover {
-				color: @red;
-			}
-		}
-		// off
-		.toggle-on a {
-			i {
-				color: @red;
-			}
-			&:hover {
-				color: @green;
-			}
-		}
 	}
 }
 
@@ -112,69 +166,91 @@
 	}
 }
 
-/*  Font Awesome styles
-    ------------------------------------------------------- */
-[class^="pldicon-"]:before,
-[class*=" pldicon-"]:before {
-  font-family: PageLinesDeveloperIcons !important;
-  font-weight: normal;
-  font-style: normal;
-  display: inline-block;
-  text-decoration: inherit;
-}
+/*
+	Based on Font Awesome
+    -------------------------------------------------------
+    The full suite of pictographic icons, examples, and documentation
+    can be found at: http://fortawesome.github.com/Font-Awesome/
 
-a [class^="pldicon-"],
-a [class*=" pldicon-"] {
-  display: inline-block;
-  text-decoration: inherit;
-}
+    License
+    -------------------------------------------------------
+    A special PageLines-Only GPL licensed version of Font Awesome was approved by the 
+	author via email. 
+  
+    Contact
+    -------------------------------------------------------
+    Email: dave@davegandy.com
+    Twitter: http://twitter.com/fortaweso_me
+    Work: Lead Product Designer @ http://kyruus.com
 
-/* makes the font 33% larger relative to the icon container */
-.icon-large:before {
-  vertical-align: middle;
-  font-size: 4/3em;
-}
+*/
 
-/* .btn, .nav-tabs {
-  [class^="icon-"],
-  [class*=" icon-"] {
-  // keeps button heights with and without icons the same
-    line-height: .9em;
-  }
-} */
+#wpadminbar {
 
-li {
-  [class^="pldicon-"],
-  [class*=" pldicon-"] {
-    display: inline-block;
-    width: 1.25em;
-    text-align: center;
-  }
-  .icon-large:before,
-  .icon-large:before {
-    /* 1.5 increased font size for icon-large * 1.25 width */
-    width: 1.5*1.25em;
-  }
-}
-
-ul.icons {
-  list-style-type: none;
-  margin-left: 2em;
-  text-indent: -.8em;
-
-  li {
-    [class^="pldicon-"],
-    [class*=" pldicon-"] {
-      width: .8em;
-    }
-    .icon-large:before,
-    .icon-large:before {
-      /* 1.5 increased font size for icon-large * 1.25 width */
-      vertical-align: initial;
-//      width: 1.5*1.25em;
-    }
-  }
-}
+	/*  Font Awesome styles
+		------------------------------------------------------- */
+	[class^="pldicon-"]:before,
+	[class*=" pldicon-"]:before {
+	  font-family: PageLinesDeveloperIcons !important;
+	  font-weight: normal;
+	  font-style: normal;
+	  display: inline-block;
+	  text-decoration: inherit;
+	}
+	
+	a [class^="pldicon-"],
+	a [class*=" pldicon-"] {
+	  display: inline-block;
+	  text-decoration: inherit;
+	}
+	
+	/* makes the font 33% larger relative to the icon container */
+	.icon-large:before {
+	  vertical-align: middle;
+	  font-size: 4/3em;
+	}
+	
+	/* .btn, .nav-tabs {
+	  [class^="icon-"],
+	  [class*=" icon-"] {
+	  // keeps button heights with and without icons the same
+		line-height: .9em;
+	  }
+	} */
+	
+	li {
+	  [class^="pldicon-"],
+	  [class*=" pldicon-"] {
+		display: inline-block;
+		width: 1.25em;
+		text-align: center;
+	  }
+	  .icon-large:before,
+	  .icon-large:before {
+		/* 1.5 increased font size for icon-large * 1.25 width */
+		width: 1.5*1.25em;
+	  }
+	}
+	
+	ul.icons {
+	  list-style-type: none;
+	  margin-left: 2em;
+	  text-indent: -.8em;
+	
+	  li {
+		[class^="pldicon-"],
+		[class*=" pldicon-"] {
+		  width: .8em;
+		}
+		.icon-large:before,
+		.icon-large:before {
+		  /* 1.5 increased font size for icon-large * 1.25 width */
+		  vertical-align: initial;
+	//      width: 1.5*1.25em;
+		}
+	  }
+	}
+} // #wpadminbar
 
 /*  Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
     readers do not read off random characters that represent icons */

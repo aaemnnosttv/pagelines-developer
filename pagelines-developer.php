@@ -3,14 +3,14 @@
 Plugin Name: PageLines Developer
 Author: Evan Mattson
 Description: A plugin for pagelines developers developers developers
-Version: 1.0.2
+Version: 1.0.3
 PageLines: true
 */
 
 
 class PageLinesDeveloper {
 
-	const version = '1.0.2';
+	const version = '1.0.3';
 
 	private $toggles;
 
@@ -79,7 +79,6 @@ class PageLinesDeveloper {
 				$const[ $c ]['value'] = constant( $c );
 		}
 		$this->const = $const;
-		//ddprint( $const, 'initial' );
 
 		$this->process_toggle();
 		$this->dynamic_define();
@@ -119,8 +118,9 @@ class PageLinesDeveloper {
 
 	function init() {
 		$this->is_dms = class_exists( 'PageLinesTemplateHandler' );
-		remove_action( 'admin_bar_menu', 'wp_admin_bar_wp_menu', 10 );
-		add_action( 'admin_bar_menu', array(&$this, 'add_new_root_menu'), 10 );
+		//remove_action( 'admin_bar_menu', 'wp_admin_bar_wp_menu', 10 );
+		//add_action( 'admin_bar_menu', array(&$this, 'add_new_root_menu'), 11 );
+		add_action( 'admin_bar_menu', array(&$this, 'admin_bar_menu'), 11 );
 	}
 	function register_less() {
 		if ( function_exists('register_lessdev_dir') )
@@ -186,8 +186,7 @@ class PageLinesDeveloper {
 
 			$all[ $cat ][ $c ] = $value;
 		}
-		//ddprint( WP_CONTENT_DIR );
-		//ddprint( $all );
+
 		return $all;
 	}
 
@@ -220,47 +219,97 @@ class PageLinesDeveloper {
 		return ( 0 === strpos($c, 'PL_') || 0 === strpos($c, 'PAGELINES_') );
 	}
 
-	function add_new_root_menu() {
-		global $wp_admin_bar, $wp_version;
+	function admin_bar_menu( $wpab ) {
+		$this->modify_root_menu( $wpab );
+		$this->add_child_menus( $wpab );
+	}
 
+	function modify_root_menu( $wpab ) {
+		global $wp_version;
+		$wp_node = $wpab->get_node('wp-logo');
 
-		/**
-		 * TOP LEVEL
-		 */
-		$wp_admin_bar->add_menu( array(
-			'id'    => $this->slug,
-			'title' => sprintf('<i class="pldicon-pagelines icon-large"></i> %s', $this->is_dms ? 'DMS ' : ''). PL_CORE_VERSION,
-			'href'  => is_admin() ? admin_url() : home_url()
-		)	);
+		$sp = '&nbsp;';
+		$pl_version = ($this->is_dms ? "DMS$sp"  : '') . PL_CORE_VERSION;
 
-		/**
-		 * Kids
-		 * ####################################
-		 */
+		$title = $wp_node->title;
+
+		// add wp version
+		$title .= "$sp$sp<span class='version'><i class='leftarrow'></i>$wp_version</span>";
+		// mirrored
+		//$title = "$title<span class='version'>$wp_version<i class='rightarrow'></i></span>$sp$sp";
+		$title = '<div class="wp ver-group">' . $title . '</div>';
+		// pagelines
+		$title .= "<div class='pl ver-group'><i class='pldicon-pagelines'></i>$sp<span class='version'><i class='leftarrow'></i>$pl_version</span></div>";
+		//$title .= sprintf('<div class="pl ver-group"><i class="pldicon-pagelines"></i>%s<span class="version"><i class="leftarrow"></i>%s</span></div>', "$sp$sp", $pl_version );
+
+		$wp_node->title = $title;
+		// link
+		$wp_node->href = is_admin() ? admin_url() : home_url();
+
+		// update node
+		$wpab->add_menu( $wp_node );
+
+		// Changelog
+		$this->child_menu(
+			array(
+				'id'    => 'pl-changelog',
+				'title' => $this->get_external_link_text('Changelog'),
+				'href'  => 'http://api.pagelines.com/changelog',
+				'meta'  => array( 'target' => '_blank', ),
+		), 'wp-logo' );
+
+		$wpab->add_group( array(
+			'parent' => 'wp-logo',
+			'id'     => 'pl-group',
+			'meta'   => array(
+				'class' => 'ab-sub-secondary pl',
+			),
+		) );
+
+		// relocate about
+		$about_node = $wpab->get_node('about');
+		$wpab->remove_node('about');
+		$about_node->parent = 'wp-logo-external';
+		$wpab->add_node( $about_node );
 		
+		// add WP Reference
 
-		// WP Logo / Version
+		// Funciton Reference
 		$this->child_menu( array(
-			'id'    => 'wp-logo',
-			'title' => '<span class="ab-icon"></span> &nbsp;&nbsp;'. $wp_version,
+			'id'    => 'wp-codex',
+			'title' => $this->get_external_link_text('Function Reference'),
+			'href'  => 'http://codex.wordpress.org/Function_Reference/',
+			'meta'  => array( 'target' => '_blank', ),
+		), 'documentation' );
+
+		// Action Reference
+		$this->child_menu( array(
+			'id'    => 'wp-plugin-api',
+			'title' => $this->get_external_link_text('Action Reference'),
+			'href'  => 'http://codex.wordpress.org/Plugin_API/Action_Reference',
+			'meta'  => array( 'target' => '_blank', ),
+		), 'documentation' );
+	}
+
+	function add_child_menus( $wpab ) {
+
+		// Launchpad
+		$this->child_menu(
+			array(
+				'id'    => 'launchpad',
+				'title' => $this->get_icon_text( 'Launchpad', 'pagelines' ),
+				'href'  => 'https://www.pagelines.com/launchpad/member.php',
+				'meta'  => array( 'target' => '_blank', ),
 		)	);
 
-			// Funciton Reference
-			$this->child_menu( array(
-				'id'    => 'wp-codex',
-				'title' => $this->get_external_link_text('Function Reference'),
-				'href'  => 'http://codex.wordpress.org/Function_Reference/',
+		// PL Reference
+		$this->child_menu(
+			array(
+				'id'    => 'pl-reference',
+				'title' => $this->get_icon_text( 'Reference', 'pagelines' ),
+				'href'  => '#',
 				'meta'  => array( 'target' => '_blank', ),
-			), 'wp-logo' );
-
-			// Action Reference
-			$this->child_menu( array(
-				'id'    => 'wp-plugin-api',
-				'title' => $this->get_external_link_text('Action Reference'),
-				'href'  => 'http://codex.wordpress.org/Plugin_API/Action_Reference',
-				'meta'  => array( 'target' => '_blank', ),
-			), 'wp-logo' );
-			#########################
+		)	);
 	
 		// CHEAT SHEET
 		$this->child_menu(
@@ -269,7 +318,7 @@ class PageLinesDeveloper {
 				'title' => $this->get_external_link_text('Cheat Sheet'),
 				'href'  => 'http://demo.pagelines.me/cheat-sheet/',
 				'meta'  => array( 'target' => '_blank', ),
-		)	);
+		), 'pl-reference' );
 
 
 		// Icon Reference
@@ -279,7 +328,7 @@ class PageLinesDeveloper {
 				'title' => $this->get_external_link_text('Icon Reference'),
 				'href'  => 'http://fortawesome.github.io/Font-Awesome/icons/',
 				'meta'  => array( 'target' => '_blank', ),
-		) 	);
+		), 'pl-reference' );
 
 		// CONSTANTS
 		if ( $this->supports['ui'] ) {
@@ -289,7 +338,7 @@ class PageLinesDeveloper {
 					'title' => $this->get_icon_text( 'CONSTANTS', 'globe' ),
 					'href'  => '#',
 					//'meta' => array('class' => 'button insert-media add_media')
-			) 	);
+			), 'pl-reference' );
 		}
 
 		// Flush LESS
@@ -322,6 +371,7 @@ class PageLinesDeveloper {
 						) ),
 					'meta' => array(
 						'class' => $action,
+						'title' => str_replace('-', ' ', $action)
 						)
 			) 	);
 		}
@@ -362,7 +412,7 @@ class PageLinesDeveloper {
 	function child_menu( $args, $parent = false ) {
 		global $wp_admin_bar;
 
-		$parent = $parent ? $parent : $this->slug;
+		$parent = $parent ? $parent : 'pl-group';
 
 		// backwards parse
 		$args = wp_parse_args( array('parent' => $parent), $args );
