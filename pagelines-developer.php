@@ -320,13 +320,21 @@ class PageLinesDeveloper {
 				'meta'  => array( 'target' => '_blank', ),
 		), 'pl-reference' );
 
-
 		// Icon Reference
 		$this->child_menu(
 			array(
 				'id'    => 'font_awesome_link',
 				'title' => $this->get_external_link_text('Icon Reference'),
 				'href'  => 'http://fortawesome.github.io/Font-Awesome/icons/',
+				'meta'  => array( 'target' => '_blank', ),
+		), 'pl-reference' );
+
+		// LESS Reference
+		$this->child_menu(
+			array(
+				'id'    => 'less_docs_link',
+				'title' => $this->get_external_link_text('LESS Docs'),
+				'href'  => 'http://leafo.net/lessphp/docs/',
 				'meta'  => array( 'target' => '_blank', ),
 		), 'pl-reference' );
 
