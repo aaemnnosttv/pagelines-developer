@@ -3,14 +3,14 @@
 Plugin Name: PageLines Developer
 Author: Evan Mattson
 Description: A plugin for pagelines developers developers developers
-Version: 1.0.3
+Version: 1.0.4
 PageLines: true
 */
 
 
 class PageLinesDeveloper {
 
-	const version = '1.0.3';
+	const version = '1.0.4';
 
 	private $toggles;
 
@@ -118,10 +118,37 @@ class PageLinesDeveloper {
 
 	function init() {
 		$this->is_dms = class_exists( 'PageLinesTemplateHandler' );
-		//remove_action( 'admin_bar_menu', 'wp_admin_bar_wp_menu', 10 );
-		//add_action( 'admin_bar_menu', array(&$this, 'add_new_root_menu'), 11 );
+
+		if ( ! $this->dev_user() )
+			return;
+
 		add_action( 'admin_bar_menu', array(&$this, 'admin_bar_menu'), 11 );
 	}
+
+	function dev_user() {
+		
+		// defined (single user and multi user)
+		if ( $this->const_check('PAGELINES_DEVELOPER_LOCK') ) {
+			
+			// get current users info
+			$user_data = wp_get_current_user();
+			$user = $user_data->user_login;
+
+			// explode the alowed users, if its a single name explode still returns an array.
+			$users = explode( ',', PAGELINES_DEVELOPER_LOCK );
+			
+			// if current user is not in the array of allowed users return false.
+			if( ! in_array( $user, $users ) )
+				return false;
+		}	
+		//	If we get this far either PAGELINES_DEVELOPER_LOCK is not defined or is not a string or the user is allowed so we just return true.
+		return true;
+	}
+
+	function const_check( $c ) {
+		return ( defined( $c ) && is_string( constant( $c ) ) && constant( $c ) );
+	}
+
 	function register_less() {
 		if ( function_exists('register_lessdev_dir') )
 			register_lessdev_dir( 'aaemnnosttv', $this->slug, $this->name, $this->path.'/styles' );
@@ -141,9 +168,6 @@ class PageLinesDeveloper {
 			wp_enqueue_script( $this->slug, "{$this->uri}/js/pagelines-developer.js", array('jquery-ui-dialog') );
 		}
 	}
-
-
-
 
 	function get_pl_constants() {
 		$known = array(
@@ -302,12 +326,21 @@ class PageLinesDeveloper {
 				'meta'  => array( 'target' => '_blank', ),
 		)	);
 
+		// PageLines Products (wp-admin)
+		$this->child_menu(
+			array(
+				'id'    => 'pl-admin',
+				'title' => $this->get_icon_text( 'Products Admin', 'pagelines' ),
+				'href'  => 'http://www.pagelines.com/wp-admin/edit.php?post_type=product',
+				'meta'  => array( 'target' => '_blank', ),
+		)	);
+
 		// PL Reference
 		$this->child_menu(
 			array(
 				'id'    => 'pl-reference',
-				'title' => $this->get_icon_text( 'Reference', 'pagelines' ),
-				'href'  => '#',
+				'title' => $this->get_icon_text( 'Docs', 'pagelines' ),
+				'href'  => 'http://docs.pagelines.com/developer/dms-option-engine',
 				'meta'  => array( 'target' => '_blank', ),
 		)	);
 	
@@ -334,7 +367,7 @@ class PageLinesDeveloper {
 			array(
 				'id'    => 'less_docs_link',
 				'title' => $this->get_external_link_text('LESS Docs'),
-				'href'  => 'http://leafo.net/lessphp/docs/',
+				'href'  => 'http://lesscss.org',
 				'meta'  => array( 'target' => '_blank', ),
 		), 'pl-reference' );
 
@@ -443,7 +476,7 @@ class PageLinesDeveloper {
 ###########################################################
 add_action( 'pagelines_hook_pre', 'init_PageLinesDeveloper' );
 function init_PageLinesDeveloper() {
-	if ( current_user_can('edit_theme_options') )
+	if ( current_user_can('edit_theme_options') && (defined('DEMO_MODE') && !DEMO_MODE) )
 		new PageLinesDeveloper;
 }
 ###########################################################
