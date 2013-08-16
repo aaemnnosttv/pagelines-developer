@@ -29,6 +29,9 @@ class PageLinesDeveloper {
 
 		$this->supports['ui'] = version_compare( $GLOBALS['wp_version'], '3.5', '>=' );
 
+		if ( defined('DEMO_MODE') && DEMO_MODE )
+			return;
+
 		$this->persistent();
 
 		if ( is_admin() )
@@ -48,9 +51,6 @@ class PageLinesDeveloper {
 
 		// core wp-admin-bar menus are added here
 		add_action( 'init',	array(&$this, 'init') );
-
-		// pagelines admin menus
-		add_action( 'admin_bar_menu', array(&$this, 'modify_pagelines_menus'), 110 );
 
 		if ( $this->supports['ui'] )
 			add_action( 'wp_after_admin_bar_render', array(&$this, 'print_modal') );
@@ -123,6 +123,8 @@ class PageLinesDeveloper {
 			return;
 
 		add_action( 'admin_bar_menu', array(&$this, 'admin_bar_menu'), 11 );
+		// pagelines admin menus
+		add_action( 'admin_bar_menu', array(&$this, 'modify_pagelines_menus'), 110 );
 	}
 
 	function dev_user() {
@@ -476,7 +478,7 @@ class PageLinesDeveloper {
 ###########################################################
 add_action( 'pagelines_hook_pre', 'init_PageLinesDeveloper' );
 function init_PageLinesDeveloper() {
-	if ( current_user_can('edit_theme_options') && (defined('DEMO_MODE') && !DEMO_MODE) )
+	if ( current_user_can('edit_theme_options') )
 		new PageLinesDeveloper;
 }
 ###########################################################
