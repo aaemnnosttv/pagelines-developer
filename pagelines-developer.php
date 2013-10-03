@@ -1,27 +1,25 @@
 <?php
 /*
-Plugin Name: PageLines Developer
-Author: Evan Mattson
-Description: A plugin for pagelines developers developers developers
-Version: 1.0.4
-PageLines: true
+	Plugin Name: PageLines Developer
+	Author: Evan Mattson
+	Author URI: http://aaemnnost.tv
+	Description: A plugin for pagelines developers developers developers
+	Version: 1.0.5
 */
 
 
-class PageLinesDeveloper {
-
+class PageLinesDeveloper
+{
 	const version = '1.0.4';
-
 	private $toggles;
 
-	function __construct() {
-
-		$this->slug  = basename( dirname( __FILE__ ) );
-		$this->_slug = str_replace( '-', '_', $this->slug );
-		$this->name  = "PageLines Developer";
-		$this->path  = sprintf( '%s/%s', WP_PLUGIN_DIR, $this->slug );
-		$this->uri   = plugins_url( $this->slug );
-
+	function __construct()
+	{
+		$this->slug    = basename( dirname( __FILE__ ) );
+		$this->_slug   = str_replace( '-', '_', $this->slug );
+		$this->name    = "PageLines Developer";
+		$this->path    = sprintf( '%s/%s', WP_PLUGIN_DIR, $this->slug );
+		$this->uri     = plugins_url( $this->slug );
 		$this->toggles = array(
 			'PL_DEV',
 			'PL_LESS_DEV'
@@ -32,43 +30,33 @@ class PageLinesDeveloper {
 		if ( defined('DEMO_MODE') && DEMO_MODE )
 			return;
 
-		$this->persistent();
-
-		if ( is_admin() )
-			$this->admin_actions();
-		else
-			$this->front_actions();
+		$this->init();
 	} // __construct
 
 /*
 	add_action( '',	array(&$this, '') );
 	add_filter( '',	array(&$this, '') );
 */
-	// actions that always run
-	function persistent() {
-
-		$this->init_constants();
-
+	function init()
+	{
 		// core wp-admin-bar menus are added here
-		add_action( 'init',	array(&$this, 'init') );
+		add_action( 'init',	array(&$this, 'init_display') );
 
 		if ( $this->supports['ui'] )
+		{
+			$this->init_constants();
 			add_action( 'wp_after_admin_bar_render', array(&$this, 'print_modal') );
-
-	}
-	// admin only
-	function admin_actions() {
+		}
+		
 		add_action( 'pagelines_setup',			array(&$this, 'register_less') );
 		add_action( 'admin_enqueue_scripts',	array(&$this, 'global_enqueue') );
-	}
-	// front only
-	function front_actions() {
 		add_action( 'wp_enqueue_scripts',		array(&$this, 'global_enqueue') );
 	}
 
 	##########################################################################################################
 	
-	function init_constants() {
+	function init_constants()
+	{
 		$const = array();
 		foreach ( $this->toggles as $c ) {
 			$defined = defined( $c );
@@ -84,8 +72,8 @@ class PageLinesDeveloper {
 		$this->dynamic_define();
 	}
 
-	function process_toggle() {
-
+	function process_toggle()
+	{
 		$keys = array(
 			'const'  => '',
 			'action' => '',
@@ -105,8 +93,10 @@ class PageLinesDeveloper {
 		$this->set_toggle_setting( $const, $action );
 	}
 
-	function dynamic_define() {
-		foreach ( $this->const as $const => $c ) {
+	function dynamic_define()
+	{
+		foreach ( $this->const as $const => $c )
+		{
 			if ( $c['defined'] )
 				continue;
 
@@ -116,7 +106,8 @@ class PageLinesDeveloper {
 		}
 	}
 
-	function init() {
+	function init_display()
+	{
 		$this->is_dms = class_exists( 'PageLinesTemplateHandler' );
 
 		if ( ! $this->dev_user() )
@@ -127,11 +118,11 @@ class PageLinesDeveloper {
 		add_action( 'admin_bar_menu', array(&$this, 'modify_pagelines_menus'), 110 );
 	}
 
-	function dev_user() {
-		
+	function dev_user()
+	{
 		// defined (single user and multi user)
-		if ( $this->const_check('PAGELINES_DEVELOPER_LOCK') ) {
-			
+		if ( $this->const_check('PAGELINES_DEVELOPER_LOCK') )
+		{	
 			// get current users info
 			$user_data = wp_get_current_user();
 			$user = $user_data->user_login;
@@ -142,16 +133,25 @@ class PageLinesDeveloper {
 			// if current user is not in the array of allowed users return false.
 			if( ! in_array( $user, $users ) )
 				return false;
-		}	
+		}
+		elseif ( !current_user_can('edit_theme_options') )
+			return false;
+
 		//	If we get this far either PAGELINES_DEVELOPER_LOCK is not defined or is not a string or the user is allowed so we just return true.
 		return true;
 	}
 
-	function const_check( $c ) {
-		return ( defined( $c ) && is_string( constant( $c ) ) && constant( $c ) );
+	function const_check( $c )
+	{
+		return (
+			defined( $c )
+			&& is_string( constant( $c ) )
+			&& constant( $c )
+		);
 	}
 
-	function register_less() {
+	function register_less()
+	{
 		if ( function_exists('register_lessdev_dir') )
 			register_lessdev_dir( 'aaemnnosttv', $this->slug, $this->name, $this->path.'/styles' );
 	}
@@ -159,19 +159,22 @@ class PageLinesDeveloper {
 	/**
 	 * Enqueue Styles for both admin & FE
 	 */
-	function global_enqueue() {
-		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
+	function global_enqueue()
+	{
+		//$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		$suffix = '';
 		wp_enqueue_style( $this->slug, "{$this->uri}/styles/pagelines-developer$suffix.css", null, self::version );
 
-		if ( $this->supports['ui'] ) {
-			wp_enqueue_style( 'media-views' );
+		if ( $this->supports['ui'] )
+		{
+			wp_enqueue_style ( 'media-views' );
 			wp_enqueue_script( 'jquery-ui-dialog' );
 			wp_enqueue_script( $this->slug, "{$this->uri}/js/pagelines-developer.js", array('jquery-ui-dialog') );
 		}
 	}
 
-	function get_pl_constants() {
+	function get_pl_constants()
+	{
 		$known = array(
 			'LESS_FILE_MODE',
 			'DYNAMIC_FILE_URL',
@@ -182,7 +185,8 @@ class PageLinesDeveloper {
 		return array_unique( array_merge( $known, $found ) );
 	}
 
-	function get_sorted_constants() {
+	function get_sorted_constants()
+	{
 		$constants = $this->get_pl_constants();
 		asort( $constants );
 		$all = array(
@@ -193,22 +197,25 @@ class PageLinesDeveloper {
 			'misc' => array(),
 		);
 
-		foreach ( $constants as $c ) {
+		foreach ( $constants as $c )
+		{
 			$cat = 'misc';
 			$value = defined( $c ) ? constant( $c ) : null;
 
-			if ( 0 === strpos($value, WP_CONTENT_DIR) ) {
-
+			// (file|dir)
+			if ( 0 === strpos($value, WP_CONTENT_DIR) )
+			{
 				if ( is_file( $value ) )
 					$cat = 'file';
 				else
 					$cat = 'dir';
 			}
-			elseif ( 0 === strpos($value, 'http') )
+			// url
+			elseif ( preg_match('#^(http|//)#', $value) )
 				$cat = 'url';
+			// admin page
 			elseif ( 0 === strpos($value, 'admin.php') )
 				$cat = 'page';
-
 
 			$all[ $cat ][ $c ] = $value;
 		}
@@ -216,24 +223,27 @@ class PageLinesDeveloper {
 		return $all;
 	}
 
-	function do_pl_constant_rows() {
-		foreach ( $this->get_sorted_constants() as $cat => $consts ) {
-			
+	function do_pl_constant_rows()
+	{
+		foreach ( $this->get_sorted_constants() as $cat => $consts )
+		{	
 			printf('<tr class="const-cat-title">
-					<td colspan="2">%s</td>
-			</tr>', $cat );
+						<td colspan="2">%s</td>
+					</tr>', $cat );
 
 			foreach ( $consts as $const => $value )
-				printf('<tr class="const-data"><td class="const-name">%s</td><td class="const-value">%s</td></tr>', $const, $value );
-			?>
-			<?php
+				printf('<tr class="const-data">
+							<td class="const-name">%s</td>
+							<td class="const-value">%s</td>
+						</tr>', $const, $value );
 		}
 	}
 
-	function discover_constants() {
+	function discover_constants()
+	{
 		$all = get_defined_constants(true);
-
 		$pl_const = array();
+
 		foreach ( $all['user'] as $name => $value )
 			if ( $this->maybe_pl_const( $name ) )
 				$pl_const[] = $name;
@@ -241,16 +251,19 @@ class PageLinesDeveloper {
 		return $pl_const;
 	}
 
-	function maybe_pl_const( $c ) {
-		return ( 0 === strpos($c, 'PL_') || 0 === strpos($c, 'PAGELINES_') );
+	function maybe_pl_const( $c )
+	{
+		return ( preg_match('/^(PL_|PAGELINES_)/', $c) );
 	}
 
-	function admin_bar_menu( $wpab ) {
+	function admin_bar_menu( $wpab )
+	{
 		$this->modify_root_menu( $wpab );
 		$this->add_child_menus( $wpab );
 	}
 
-	function modify_root_menu( $wpab ) {
+	function modify_root_menu( $wpab )
+	{
 		global $wp_version;
 		$wp_node = $wpab->get_node('wp-logo');
 
@@ -258,21 +271,15 @@ class PageLinesDeveloper {
 		$pl_version = ($this->is_dms ? "DMS$sp"  : '') . PL_CORE_VERSION;
 
 		$title = $wp_node->title;
-
 		// add wp version
 		$title .= "$sp$sp<span class='version'><i class='leftarrow'></i>$wp_version</span>";
-		// mirrored
-		//$title = "$title<span class='version'>$wp_version<i class='rightarrow'></i></span>$sp$sp";
 		$title = '<div class="wp ver-group">' . $title . '</div>';
 		// pagelines
 		$title .= "<div class='pl ver-group'><i class='pldicon-pagelines'></i>$sp<span class='version'><i class='leftarrow'></i>$pl_version</span></div>";
-		//$title .= sprintf('<div class="pl ver-group"><i class="pldicon-pagelines"></i>%s<span class="version"><i class="leftarrow"></i>%s</span></div>', "$sp$sp", $pl_version );
 
+		// update wp-node
 		$wp_node->title = $title;
-		// link
 		$wp_node->href = is_admin() ? admin_url() : home_url();
-
-		// update node
 		$wpab->add_menu( $wp_node );
 
 		// Changelog
@@ -280,10 +287,10 @@ class PageLinesDeveloper {
 			array(
 				'id'    => 'pl-changelog',
 				'title' => $this->get_external_link_text('Changelog'),
-				'href'  => 'http://api.pagelines.com/changelog',
+				'href'  => 'https://github.com/pagelines/DMS/blob/Dev/changelog.txt',
 				'meta'  => array( 'target' => '_blank', ),
 		), 'wp-logo' );
-
+		// PL Group
 		$wpab->add_group( array(
 			'parent' => 'wp-logo',
 			'id'     => 'pl-group',
@@ -294,12 +301,11 @@ class PageLinesDeveloper {
 
 		// relocate about
 		$about_node = $wpab->get_node('about');
-		$wpab->remove_node('about');
 		$about_node->parent = 'wp-logo-external';
+		$wpab->remove_node('about');
 		$wpab->add_node( $about_node );
 		
 		// add WP Reference
-
 		// Funciton Reference
 		$this->child_menu( array(
 			'id'    => 'wp-codex',
@@ -317,8 +323,8 @@ class PageLinesDeveloper {
 		), 'documentation' );
 	}
 
-	function add_child_menus( $wpab ) {
-
+	function add_child_menus( $wpab )
+	{
 		// Launchpad
 		$this->child_menu(
 			array(
@@ -345,7 +351,16 @@ class PageLinesDeveloper {
 				'href'  => 'http://docs.pagelines.com/developer/dms-option-engine',
 				'meta'  => array( 'target' => '_blank', ),
 		)	);
-	
+
+		// Github Docs
+		$this->child_menu(
+			array(
+				'id'    => 'dms.io',
+				'title' => $this->get_external_link_text('Docs'),
+				'href'  => 'http://docs.pagelines.com/',
+				'meta'  => array( 'target' => '_blank', ),
+		), 'pl-reference' );
+
 		// CHEAT SHEET
 		$this->child_menu(
 			array(
@@ -374,13 +389,13 @@ class PageLinesDeveloper {
 		), 'pl-reference' );
 
 		// CONSTANTS
-		if ( $this->supports['ui'] ) {
+		if ( $this->supports['ui'] )
+		{
 			$this->child_menu(
 				array(
 					'id'    => 'pl_constants',
 					'title' => $this->get_icon_text( 'CONSTANTS', 'globe' ),
 					'href'  => '#',
-					//'meta' => array('class' => 'button insert-media add_media')
 			), 'pl-reference' );
 		}
 
@@ -394,14 +409,14 @@ class PageLinesDeveloper {
 
 
 		// Constant Toggles
-		foreach ( $this->const as $const => $c ) {
+		foreach ( $this->const as $const => $c ) :
+
 			if ( $c['defined'] )
 				continue;
 
-			$saved = $this->get_toggle_setting( $const );
-
+			$saved  = $this->get_toggle_setting( $const );
 			$action = $saved ? 'toggle-off' : 'toggle-on';
-			$nonce = wp_create_nonce( "$const|$action" );
+			$nonce  = wp_create_nonce( "$const|$action" );
 
 			$this->child_menu(
 				array(
@@ -411,18 +426,18 @@ class PageLinesDeveloper {
 						'const'  => $const,
 						'action' => $action,
 						'nonce'  => $nonce,
-						) ),
+					) ),
 					'meta' => array(
 						'class' => $action,
 						'title' => str_replace('-', ' ', $action)
-						)
+					)
 			) 	);
-		}
 
-
+		endforeach;
 	}
 
-	function get_toggle_setting( $const ) {
+	function get_toggle_setting( $const )
+	{
 		$d = array(
 			'toggle' => array()
 		);
@@ -430,7 +445,9 @@ class PageLinesDeveloper {
 		$setting = wp_parse_args( $setting, $d );
 		return isset( $setting['toggle'][ $const ] ) ? $setting['toggle'][ $const ] : null;
 	}
-	private function set_toggle_setting( $const, $val ) {
+
+	private function set_toggle_setting( $const, $val )
+	{
 		$d = array(
 			'toggle' => array()
 		);
@@ -444,15 +461,18 @@ class PageLinesDeveloper {
 	}
 
 
-	function get_icon_text( $text, $icon ) {
+	function get_icon_text( $text, $icon )
+	{
 		return sprintf('<i class="pldicon-%s"></i>&nbsp;&nbsp;%s', $icon, $text );
 	}
 
-	function get_external_link_text( $text ) {
+	function get_external_link_text( $text )
+	{
 		return $this->get_icon_text( $text, 'external-link');
 	}
 
-	function child_menu( $args, $parent = false ) {
+	function child_menu( $args, $parent = false )
+	{
 		global $wp_admin_bar;
 
 		$parent = $parent ? $parent : 'pl-group';
@@ -463,12 +483,13 @@ class PageLinesDeveloper {
 		$wp_admin_bar->add_menu( $args );
 	}
 
-	function modify_pagelines_menus() {
-		global $wp_admin_bar;
-		$wp_admin_bar->remove_menu('pl_flush');
+	function modify_pagelines_menus( $wpab )
+	{
+		$wpab->remove_menu('pl_flush'); // relocated
 	}
 
-	function print_modal() {
+	function print_modal()
+	{
 		include('modal.php');
 	}
 
@@ -477,8 +498,8 @@ class PageLinesDeveloper {
 
 ###########################################################
 add_action( 'pagelines_hook_pre', 'init_PageLinesDeveloper' );
-function init_PageLinesDeveloper() {
-	if ( current_user_can('edit_theme_options') )
-		new PageLinesDeveloper;
+function init_PageLinesDeveloper()
+{
+	new PageLinesDeveloper;
 }
 ###########################################################

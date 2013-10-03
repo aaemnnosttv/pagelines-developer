@@ -17,12 +17,13 @@
 }
 
 #wpadminbar {
-	.ver-group {
-	}
-	
-	.menupop {
 
-		.ver-group {
+	.ver-group {}
+	
+	.menupop
+	{
+		.ver-group
+		{
 			display: inline-block;
 			white-space: pre;
 			&.pl {
@@ -36,9 +37,7 @@
 					font-size: 4/3em;
 				}		
 			}
-			&.wp {
-				//.ab-icon { float: right; }
-			}
+			&.wp {}
 		}
 	
 		.ab-item .version {
@@ -134,6 +133,25 @@
 	
 	#wp-admin-bar-pagelines-developer-default {
 		
+	}
+} // #wpadminbar
+
+@ver_calt : fade(white,10);
+// MP6 color
+body.mp6 {
+	#wpadminbar
+	{
+		.ab-item .version
+		{
+			background: @ver_calt;
+			
+			.leftarrow:before {
+				border-right-color: @ver_calt;
+			}
+			.rightarrow:before {
+				border-left-color: @ver_calt;
+			}
+		}
 	}
 }
 

@@ -98,6 +98,15 @@
   text-shadow: none;
   color: #049cdb;
 }
+body.mp6 #wpadminbar .ab-item .version {
+  background: rgba(255,255,255,0.1);
+}
+body.mp6 #wpadminbar .ab-item .version .leftarrow:before {
+  border-right-color: rgba(255,255,255,0.1);
+}
+body.mp6 #wpadminbar .ab-item .version .rightarrow:before {
+  border-left-color: rgba(255,255,255,0.1);
+}
 #pl_constants td {
   vertical-align: top;
 }
