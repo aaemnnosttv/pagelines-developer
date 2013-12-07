@@ -287,7 +287,7 @@ class PageLinesDeveloper
 			array(
 				'id'    => 'pl-changelog',
 				'title' => $this->get_external_link_text('Changelog'),
-				'href'  => 'https://github.com/pagelines/DMS/blob/Dev/changelog.txt',
+				'href'  => 'https://github.com/pagelines/DMS/blob/1.1/changelog.txt',
 				'meta'  => array( 'target' => '_blank', ),
 		), 'wp-logo' );
 		// PL Group
