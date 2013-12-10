@@ -4,13 +4,13 @@
 	Author: Evan Mattson
 	Author URI: http://aaemnnost.tv
 	Description: A plugin for pagelines developers developers developers
-	Version: 1.0.5
+	Version: 1.0.6
 */
 
 
 class PageLinesDeveloper
 {
-	const version = '1.0.4';
+	const version = '1.0.6';
 	private $toggles;
 
 	function __construct()
