@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'PageLinesDeveloperIcons';
-  src: url('http://localhost/pagelines/wp-content/plugins/pagelines-developer/icon-font/plfont-regular.eot');
-  src: url('http://localhost/pagelines/wp-content/plugins/pagelines-developer/icon-font/plfont-regular.eot?#iefix') format('embedded-opentype'), url('http://localhost/pagelines/wp-content/plugins/pagelines-developer/icon-font/plfont-regular.woff') format('woff'), url('http://localhost/pagelines/wp-content/plugins/pagelines-developer/icon-font/plfont-regular.ttf') format('truetype'), url('http://localhost/pagelines/wp-content/plugins/pagelines-developer/icon-font/plfont-regular.svg') format('svg');
+  src: url('../icon-font/plfont-regular.eot');
+  src: url('../icon-font/plfont-regular.eot?#iefix') format('embedded-opentype'), url('../icon-font/plfont-regular.woff') format('woff'), url('../icon-font/plfont-regular.ttf') format('truetype'), url('../icon-font/plfont-regular.svg') format('svg');
   font-weight: normal;
   font-style: normal;
 }

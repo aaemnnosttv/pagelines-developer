@@ -4,13 +4,13 @@
 	Author: Evan Mattson
 	Author URI: http://aaemnnost.tv
 	Description: A plugin for pagelines developers developers developers
-	Version: 1.0.5
+	Version: 1.0.6
 */
 
 
 class PageLinesDeveloper
 {
-	const version = '1.0.4';
+	const version = '1.0.6';
 	private $toggles;
 
 	function __construct()
@@ -47,14 +47,14 @@ class PageLinesDeveloper
 			$this->init_constants();
 			add_action( 'wp_after_admin_bar_render', array(&$this, 'print_modal') );
 		}
-		
+
 		add_action( 'pagelines_setup',			array(&$this, 'register_less') );
 		add_action( 'admin_enqueue_scripts',	array(&$this, 'global_enqueue') );
 		add_action( 'wp_enqueue_scripts',		array(&$this, 'global_enqueue') );
 	}
 
 	##########################################################################################################
-	
+
 	function init_constants()
 	{
 		$const = array();
@@ -122,14 +122,14 @@ class PageLinesDeveloper
 	{
 		// defined (single user and multi user)
 		if ( $this->const_check('PAGELINES_DEVELOPER_LOCK') )
-		{	
+		{
 			// get current users info
 			$user_data = wp_get_current_user();
 			$user = $user_data->user_login;
 
 			// explode the alowed users, if its a single name explode still returns an array.
 			$users = explode( ',', PAGELINES_DEVELOPER_LOCK );
-			
+
 			// if current user is not in the array of allowed users return false.
 			if( ! in_array( $user, $users ) )
 				return false;
@@ -226,7 +226,7 @@ class PageLinesDeveloper
 	function do_pl_constant_rows()
 	{
 		foreach ( $this->get_sorted_constants() as $cat => $consts )
-		{	
+		{
 			printf('<tr class="const-cat-title">
 						<td colspan="2">%s</td>
 					</tr>', $cat );
@@ -287,7 +287,7 @@ class PageLinesDeveloper
 			array(
 				'id'    => 'pl-changelog',
 				'title' => $this->get_external_link_text('Changelog'),
-				'href'  => 'https://github.com/pagelines/DMS/blob/Dev/changelog.txt',
+				'href'  => 'https://github.com/pagelines/DMS/blob/1.1/changelog.txt',
 				'meta'  => array( 'target' => '_blank', ),
 		), 'wp-logo' );
 		// PL Group
@@ -304,7 +304,7 @@ class PageLinesDeveloper
 		$about_node->parent = 'wp-logo-external';
 		$wpab->remove_node('about');
 		$wpab->add_node( $about_node );
-		
+
 		// add WP Reference
 		// Funciton Reference
 		$this->child_menu( array(
