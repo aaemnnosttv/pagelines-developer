@@ -369,6 +369,15 @@ class PageLinesDeveloper
 				'href'  => 'http://demo.pagelines.me/cheat-sheet/',
 				'meta'  => array( 'target' => '_blank', ),
 		), 'pl-reference' );
+		
+		// DMS Hooks
+		$this->child_menu(
+			array(
+				'id'    => 'dms_hooks_link',
+				'title' => $this->get_external_link_text('DMS Hooks'),
+				'href'  => 'http://www.pagelines.com/api/dms-updates/hooks.php',
+				'meta'  => array( 'target' => '_blank', ),
+		), 'pl-reference' );
 
 		// Icon Reference
 		$this->child_menu(
