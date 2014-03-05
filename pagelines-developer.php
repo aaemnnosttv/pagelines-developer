@@ -4,14 +4,14 @@
 	Author: Evan Mattson
 	Author URI: http://aaemnnost.tv
 	Description: A plugin for pagelines developers developers developers
-	Version: 1.0.6
+	Version: 1.0.7
 	GitHub Plugin URI: aaemnnosttv/pagelines-developer
 */
 
 
 class PageLinesDeveloper
 {
-	const version = '1.0.6';
+	const version = '1.0.7';
 	private $toggles;
 
 	function __construct()
