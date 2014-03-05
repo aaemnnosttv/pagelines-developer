@@ -164,7 +164,7 @@ class PageLinesDeveloper
 	{
 		if ( !is_admin_bar_showing() )
 			return;
-		
+
 		//$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		$suffix = '';
 		wp_enqueue_style( $this->slug, "{$this->uri}/styles/pagelines-developer$suffix.css", null, self::version );
@@ -173,7 +173,7 @@ class PageLinesDeveloper
 		{
 			wp_enqueue_style ( 'media-views' );
 			wp_enqueue_script( 'jquery-ui-dialog' );
-			wp_enqueue_script( $this->slug, "{$this->uri}/js/pagelines-developer.js", array('jquery-ui-dialog') );
+			wp_enqueue_script( $this->slug, "{$this->uri}/js/pagelines-developer.js", array('jquery-ui-dialog'), self::version );
 		}
 	}
 
