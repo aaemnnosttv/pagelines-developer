@@ -5,6 +5,7 @@
 	Author URI: http://aaemnnost.tv
 	Description: A plugin for pagelines developers developers developers
 	Version: 1.0.6
+	GitHub Plugin URI: aaemnnosttv/pagelines-developer
 */
 
 
