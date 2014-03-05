@@ -162,6 +162,9 @@ class PageLinesDeveloper
 	 */
 	function global_enqueue()
 	{
+		if ( !is_admin_bar_showing() )
+			return;
+		
 		//$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		$suffix = '';
 		wp_enqueue_style( $this->slug, "{$this->uri}/styles/pagelines-developer$suffix.css", null, self::version );
