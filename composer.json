@@ -1,0 +1,9 @@
+{
+  "name": "aaemnnosttv/pagelines-developer",
+  "type": "wordpress-plugin",
+  "description": "A plugin for PageLines developers developers developers.",
+  "keywords": ["plugin","wordpress","pagelines"],
+  "require": {
+    "composer/installers": "~1.0.6"
+  }
+}
